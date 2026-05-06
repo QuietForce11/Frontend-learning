@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Library Demo</title>
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+  <style>
+    body {
+      font-family: Arial;
+      padding: 20px;
+      background: #f5f7fb;
+    }
+
+    h1 {
+      color: steelblue;
+    }
+
+    .box {
+      background: white;
+      padding: 15px;
+      margin-top: 15px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    #text {
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+
+    button {
+      padding: 8px 14px;
+      margin: 5px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      background: steelblue;
+      color: white;
+    }
+
+    button:hover {
+      background: #274b8a;
+    }
+  </style>
+</head>
+
+<body>
+
+<h1>Library Example (jQuery)</h1>
+
+<div class="box">
+  <p id="text">Hello World</p>
+
+  <button id="changeBtn">Change Text</button>
+  <button id="hideBtn">Hide</button>
+  <button id="showBtn">Show</button>
+</div>
+
+<script>
+  $("#changeBtn").click(function () {
+    $("#text").text("Changed using jQuery library");
+  });
+
+  $("#hideBtn").click(function () {
+    $("#text").hide();
+  });
+
+  $("#showBtn").click(function () {
+    $("#text").show();
+  });
+</script>
+
+</body>
+</html>

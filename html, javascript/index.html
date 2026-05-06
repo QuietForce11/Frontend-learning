@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>HTML Basics Demo</title>
+
+  <style>
+    body { font-family: Arial; padding: 20px; }
+    h2 { color: steelblue; border-bottom: 2px solid steelblue; padding-bottom: 5px; }
+
+    table { border-collapse: collapse; margin: 10px 0; }
+    table, th, td { border: 1px solid #ccc; padding: 8px; }
+
+    th { background: steelblue; color: white; }
+
+    button {
+      padding: 8px 14px;
+      background: steelblue;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .result {
+      background: #f4f4f4;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+
+<body>
+
+<h1>HTML Basics</h1>
+
+<h2>Links</h2>
+<a href="https://www.google.com" target="_blank">Google</a>
+
+<h2>Images</h2>
+<img src="https://via.placeholder.com/150">
+
+<h2>Lists</h2>
+<ul>
+  <li>HTML</li>
+  <li>CSS</li>
+  <li>JS</li>
+</ul>
+
+<ol>
+  <li>Learn HTML</li>
+  <li>Practice</li>
+</ol>
+
+<h2>Table</h2>
+<table>
+  <tr><th>Name</th><th>Age</th></tr>
+  <tr><td>John</td><td>20</td></tr>
+</table>
+
+<h2>Form</h2>
+<input id="nameInput" placeholder="Enter name">
+<button onclick="submitName()">Submit</button>
+
+<div id="formResult" class="result"></div>
+
+<h2>JS Buttons</h2>
+<button onclick="showText()">Show Text</button>
+<button onclick="doMath()">Do Math</button>
+<button onclick="changeText()">Change Text</button>
+
+<div id="result" class="result"></div>
+
+<h2>Semantic Elements</h2>
+<header>Header section</header>
+<footer>Footer section</footer>
+
+<!-- LINK TO JS FILE -->
+<script src="script.js"></script>
+
+</body>
+</html>

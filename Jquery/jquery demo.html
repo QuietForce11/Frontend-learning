@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>jQuery Demo</title>
+
+  <!-- Linking jQuery -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+  <style>
+    body { font-family: Arial; padding: 20px; }
+    .box { width: 200px; height: 80px; background: steelblue; color: white; text-align: center; line-height: 80px; margin: 10px 0; }
+    button { margin: 5px; padding: 8px 14px; cursor: pointer; }
+    .highlight { color: blue; font-weight: bold; }
+  </style>
+</head>
+<body>
+
+  <h1>jQuery Demo</h1>
+
+  <h2>1. Hide & Show</h2>
+  <p id="text1">Hello! I can be hidden.</p>
+  <button id="hideBtn">Hide</button>
+  <button id="showBtn">Show</button>
+
+  <h2>2. Fading</h2>
+  <div class="box" id="fadeBox">Fade Me</div>
+  <button id="fadeBtn">Fade Out</button>
+  <button id="fadeInBtn">Fade In</button>
+
+  <h2>3. Sliding</h2>
+  <div class="box" id="slideBox">Slide Me</div>
+  <button id="slideBtn">Slide Up</button>
+  <button id="slideDownBtn">Slide Down</button>
+
+  <h2>4. Change Text</h2>
+  <p id="text2">Original Text</p>
+  <button id="changeBtn">Change Text</button>
+
+  <h2>5. Add Element</h2>
+  <div id="listArea"><p>Item 1</p></div>
+  <button id="addBtn">Add Item</button>
+
+  <h2>6. CSS Class</h2>
+  <p id="text3">Click to highlight me</p>
+  <button id="classBtn">Toggle Highlight</button>
+
+  <h2>7. AJAX</h2>
+  <div id="ajaxResult">Result will show here</div>
+  <button id="ajaxBtn">Load Data</button>
+
+  <script>
+    $(document).ready(function() {
+
+      $("#hideBtn").click(function() { $("#text1").hide(); });
+      $("#showBtn").click(function() { $("#text1").show(); });
+
+      $("#fadeBtn").click(function() { $("#fadeBox").fadeOut("slow"); });
+      $("#fadeInBtn").click(function() { $("#fadeBox").fadeIn("slow"); });
+
+      $("#slideBtn").click(function() { $("#slideBox").slideUp("slow"); });
+      $("#slideDownBtn").click(function() { $("#slideBox").slideDown("slow"); });
+
+      $("#changeBtn").click(function() { $("#text2").text("Text has been changed!"); });
+
+      $("#addBtn").click(function() { $("#listArea").append("<p>New Item</p>"); });
+
+      $("#classBtn").click(function() { $("#text3").toggleClass("highlight"); });
+
+      $("#ajaxBtn").click(function() {
+        $.get("https://jsonplaceholder.typicode.com/posts/1", function(data) {
+          $("#ajaxResult").text(data.title);
+        });
+      });
+
+    });
+  </script>
+
+</body>
+</html>

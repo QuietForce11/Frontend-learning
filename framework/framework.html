@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Framework Demo</title>
+
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <style>
+    body {
+      font-family: Arial;
+      padding: 20px;
+      background: #f5f7fb;
+    }
+
+    h1 {
+      color: steelblue;
+    }
+
+    .box {
+      background: white;
+      padding: 15px;
+      margin: 15px 0;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    button {
+      padding: 8px 14px;
+      margin: 5px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      background: steelblue;
+      color: white;
+    }
+
+    button:hover {
+      background: #274b8a;
+    }
+
+    p {
+      font-size: 18px;
+    }
+  </style>
+</head>
+
+<body>
+
+<h1>Framework Example (React)</h1>
+
+<div id="root"></div>
+
+<script type="text/babel">
+
+function Counter() {
+  const [count, setCount] = React.useState(0);
+
+  return (
+    <div className="box">
+      <h2>Counter Component</h2>
+      <p>Count: {count}</p>
+
+      <button onClick={() => setCount(count + 1)}>+</button>
+      <button onClick={() => setCount(count - 1)}>-</button>
+    </div>
+  );
+}
+
+function Message() {
+  const [msg, setMsg] = React.useState("Hello World");
+
+  return (
+    <div className="box">
+      <h2>Message Component</h2>
+      <p>{msg}</p>
+
+      <button onClick={() => setMsg("Updated by React")}>
+        Change
+      </button>
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <div>
+      <Counter />
+      <Message />
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+
+</script>
+
+</body>
+</html>

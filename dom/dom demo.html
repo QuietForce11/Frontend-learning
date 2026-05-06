@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>DOM Demo</title>
+
+  <style>
+    body { font-family: Arial; padding: 20px; }
+
+    h2 {
+      color: steelblue;
+      border-bottom: 2px solid steelblue;
+      padding-bottom: 5px;
+    }
+
+    button {
+      margin: 5px;
+      padding: 8px 14px;
+      background: steelblue;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .box {
+      background: #eee;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+
+<body>
+
+<h1>DOM Demo</h1>
+
+<!-- CHANGE TEXT -->
+<h2>Change Text</h2>
+<p id="text">Original text</p>
+<button id="changeTextBtn">Change Text</button>
+
+<!-- CHANGE STYLE -->
+<h2>Change Style</h2>
+<p id="styleText">Style me</p>
+<button id="styleBtn">Change Style</button>
+<button id="resetStyleBtn">Reset</button>
+
+<!-- ADD / REMOVE -->
+<h2>Add / Remove Elements</h2>
+<div id="list" class="box">
+  <p>Item 1</p>
+</div>
+<button id="addBtn">Add Item</button>
+<button id="removeBtn">Remove Item</button>
+
+<!-- EVENTS -->
+<h2>Events</h2>
+<p id="eventText">Try buttons</p>
+<button id="clickBtn">Click</button>
+<button id="hoverBtn">Hover</button>
+
+<script>
+  // CHANGE TEXT
+  document.getElementById("changeTextBtn").onclick = function () {
+    document.getElementById("text").textContent = "Text changed!";
+  };
+
+  // CHANGE STYLE
+  document.getElementById("styleBtn").onclick = function () {
+    let el = document.getElementById("styleText");
+    el.style.background = "steelblue";
+    el.style.color = "white";
+    el.style.padding = "5px";
+  };
+
+  document.getElementById("resetStyleBtn").onclick = function () {
+    document.getElementById("styleText").style = "";
+  };
+
+  // ADD ELEMENT
+  document.getElementById("addBtn").onclick = function () {
+    let p = document.createElement("p");
+    p.textContent = "New Item";
+    document.getElementById("list").appendChild(p);
+  };
+
+  // REMOVE ELEMENT
+  document.getElementById("removeBtn").onclick = function () {
+    let list = document.getElementById("list");
+    if (list.lastElementChild) {
+      list.removeChild(list.lastElementChild);
+    }
+  };
+
+  // EVENTS
+  document.getElementById("clickBtn").onclick = function () {
+    document.getElementById("eventText").textContent = "Clicked!";
+  };
+
+  document.getElementById("hoverBtn").onmouseover = function () {
+    document.getElementById("eventText").textContent = "Hovering!";
+  };
+
+  document.getElementById("hoverBtn").onmouseout = function () {
+    document.getElementById("eventText").textContent = "Stopped hovering!";
+  };
+</script>
+
+</body>
+</html>

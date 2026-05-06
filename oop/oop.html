@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>OOP Demo</title>
+
+  <style>
+    body {
+      font-family: Arial;
+      padding: 20px;
+      background: #f5f7fb;
+    }
+
+    h1 {
+      color: steelblue;
+    }
+
+    .box {
+      background: white;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      margin-top: 15px;
+    }
+
+    button {
+      padding: 8px 14px;
+      margin: 5px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      background: steelblue;
+      color: white;
+    }
+
+    button:hover {
+      background: #274b8a;
+    }
+
+    #result {
+      margin-top: 10px;
+      font-size: 16px;
+    }
+  </style>
+</head>
+
+<body>
+
+<h1>OOP Demo (Encapsulation, Inheritance, Polymorphism)</h1>
+
+<div class="box">
+  <button id="runBtn">Run OOP Example</button>
+  <p id="result"></p>
+</div>
+
+<script>
+  // Encapsulation
+  class BankAccount {
+    #balance = 0;
+
+    deposit(amount) {
+      this.#balance += amount;
+    }
+
+    getBalance() {
+      return this.#balance;
+    }
+  }
+
+  // Inheritance
+  class Animal {
+    constructor(name) {
+      this.name = name;
+    }
+
+    speak() {
+      return this.name + " makes a sound";
+    }
+  }
+
+  class Dog extends Animal {
+    speak() {
+      return this.name + " barks";
+    }
+  }
+
+  // Polymorphism
+  class Circle {
+    constructor(r) {
+      this.r = r;
+    }
+    area() {
+      return Math.PI * this.r * this.r;
+    }
+  }
+
+  class Rectangle {
+    constructor(w, h) {
+      this.w = w;
+      this.h = h;
+    }
+    area() {
+      return this.w * this.h;
+    }
+  }
+
+  document.getElementById("runBtn").onclick = function () {
+    let acc = new BankAccount();
+    acc.deposit(1000);
+
+    let dog = new Dog("Rex");
+
+    let shapes = [new Circle(5), new Rectangle(4, 6)];
+
+    document.getElementById("result").textContent =
+      "Balance: " + acc.getBalance() +
+      " | " + dog.speak() +
+      " | Areas: " + shapes.map(s => s.area().toFixed(2)).join(", ");
+  };
+</script>
+
+</body>
+</html>
