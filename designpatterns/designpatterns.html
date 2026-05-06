@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Design Patterns Demo</title>
+
+  <style>
+    body { font-family: Arial; padding: 20px; }
+    h2 { color: steelblue; border-bottom: 2px solid steelblue; padding-bottom: 5px; }
+    button {
+      margin: 5px;
+      padding: 8px 14px;
+      cursor: pointer;
+      background: steelblue;
+      color: white;
+      border: none;
+      border-radius: 4px;
+    }
+    .result {
+      background: #f4f4f4;
+      padding: 10px;
+      border-radius: 4px;
+      margin: 10px 0;
+      min-height: 30px;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Design Patterns Demo</h1>
+
+<h2>1. Singleton</h2>
+<button id="singletonBtn">Run Singleton</button>
+<div id="singletonResult" class="result"></div>
+
+<h2>2. Factory</h2>
+<button id="emailBtn">Email</button>
+<button id="smsBtn">SMS</button>
+<button id="pushBtn">Push</button>
+<div id="factoryResult" class="result"></div>
+
+<h2>3. Observer</h2>
+<button id="subscribeBtn">Subscribe</button>
+<button id="notifyBtn">Notify</button>
+<div id="observerResult" class="result"></div>
+
+<h2>4. Strategy</h2>
+<button id="cardBtn">Card</button>
+<button id="paypalBtn">PayPal</button>
+<button id="cryptoBtn">Crypto</button>
+<div id="strategyResult" class="result"></div>
+
+<h2>5. Facade</h2>
+<button id="travelBtn">Book Trip</button>
+<div id="facadeResult" class="result"></div>
+
+<script>
+
+// 1. SINGLETON
+class AppSettings {
+  static instance = null;
+
+  constructor() {
+    if (AppSettings.instance) return AppSettings.instance;
+    this.theme = "dark";
+    AppSettings.instance = this;
+  }
+}
+
+document.getElementById("singletonBtn").onclick = function() {
+  let a = new AppSettings();
+  let b = new AppSettings();
+  document.getElementById("singletonResult").textContent =
+    "Same instance: " + (a === b);
+};
+
+
+// 2. FACTORY
+class NotificationFactory {
+  static create(type) {
+    if (type === "email") return "Email sent";
+    if (type === "sms") return "SMS sent";
+    if (type === "push") return "Push sent";
+  }
+}
+
+document.getElementById("emailBtn").onclick = function() {
+  document.getElementById("factoryResult").textContent =
+    NotificationFactory.create("email");
+};
+
+document.getElementById("smsBtn").onclick = function() {
+  document.getElementById("factoryResult").textContent =
+    NotificationFactory.create("sms");
+};
+
+document.getElementById("pushBtn").onclick = function() {
+  document.getElementById("factoryResult").textContent =
+    NotificationFactory.create("push");
+};
+
+
+// 3. OBSERVER
+class Channel {
+  constructor() {
+    this.subscribers = [];
+  }
+
+  subscribe(name) {
+    this.subscribers.push(name);
+  }
+
+  notify(msg) {
+    return this.subscribers.map(s => s + " got " + msg).join(" | ");
+  }
+}
+
+let channel = new Channel();
+
+document.getElementById("subscribeBtn").onclick = function() {
+  channel = new Channel();
+  channel.subscribe("John");
+  channel.subscribe("Jane");
+  document.getElementById("observerResult").textContent = "Subscribed!";
+};
+
+document.getElementById("notifyBtn").onclick = function() {
+  document.getElementById("observerResult").textContent =
+    channel.notify("New Video");
+};
+
+
+// 4. STRATEGY
+class Payment {
+  constructor(method) {
+    this.method = method;
+  }
+
+  pay(amount) {
+    return this.method(amount);
+  }
+}
+
+const card = amt => "Paid ₦" + amt + " with Card";
+const paypal = amt => "Paid ₦" + amt + " with PayPal";
+const crypto = amt => "Paid ₦" + amt + " with Crypto";
+
+document.getElementById("cardBtn").onclick = function() {
+  document.getElementById("strategyResult").textContent =
+    new Payment(card).pay(5000);
+};
+
+document.getElementById("paypalBtn").onclick = function() {
+  document.getElementById("strategyResult").textContent =
+    new Payment(paypal).pay(5000);
+};
+
+document.getElementById("cryptoBtn").onclick = function() {
+  document.getElementById("strategyResult").textContent =
+    new Payment(crypto).pay(5000);
+};
+
+
+// 5. FACADE
+class Flight { book() { return "Flight booked"; } }
+class Hotel { book() { return "Hotel booked"; } }
+class Car { book() { return "Car rented"; } }
+
+class TravelFacade {
+  constructor() {
+    this.flight = new Flight();
+    this.hotel = new Hotel();
+    this.car = new Car();
+  }
+
+  bookTrip() {
+    return this.flight.book() + " | " +
+           this.hotel.book() + " | " +
+           this.car.book();
+  }
+}
+
+document.getElementById("travelBtn").onclick = function() {
+  let trip = new TravelFacade();
+  document.getElementById("facadeResult").textContent =
+    trip.bookTrip();
+};
+
+</script>
+
+</body>
+</html>
