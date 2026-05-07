@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Population Counter</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: Arial; background: #f0f2f5; padding: 20px; }
+    .container { max-width: 600px; margin: 0 auto; background: white; border-radius: 8px; padding: 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+    h1 { color: steelblue; text-align: center; margin-bottom: 20px; }
+    h2 { color: #333; margin: 20px 0 10px; border-bottom: 2px solid steelblue; padding-bottom: 5px; }
+    .form-group { margin-bottom: 15px; }
+    label { display: block; margin-bottom: 5px; font-weight: bold; color: #555; }
+    input, select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; }
+    button { padding: 10px 20px; background: steelblue; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; margin: 5px 5px 5px 0; }
+    button:hover { background: #2a6496; }
+    #computeBtn { background: #27ae60; }
+    #computeBtn:hover { background: #219a52; }
+    .stats { display: flex; gap: 10px; margin-top: 10px; }
+    .stat-box { flex: 1; padding: 10px; border-radius: 4px; text-align: center; font-weight: bold; }
+    .stat-total { background: #eaf4fb; color: steelblue; }
+    .stat-male { background: #e8f4f8; color: steelblue; }
+    .stat-female { background: #fce4f0; color: #e91e8c; }
+    #entriesList { margin-top: 15px; max-height: 200px; overflow-y: auto; border: 1px solid #eee; border-radius: 4px; }
+    .entry-item { padding: 10px 15px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; font-size: 14px; }
+    .male { color: steelblue; font-weight: bold; }
+    .female { color: #e91e8c; font-weight: bold; }
+    .empty-state { text-align: center; padding: 20px; color: #999; font-style: italic; }
+    #modalOverlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 999; justify-content: center; align-items: center; }
+    #modal { background: white; border-radius: 8px; padding: 30px; width: 90%; max-width: 400px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+    #modal h2 { border: none; color: steelblue; margin-bottom: 20px; }
+    .modal-stat { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #eee; font-size: 16px; }
+    .modal-stat:last-of-type { border-bottom: none; }
+    .modal-label { color: #555; }
+    .modal-value { font-weight: bold; }
+    #closeModal { margin-top: 20px; background: #e74c3c; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <h1>Population Counter</h1>
+
+  <h2>Add Entry</h2>
+
+  <div class="form-group">
+    <label>Full Name</label>
+    <input type="text" id="nameInput" placeholder="Enter your name">
+  </div>
+
+  <div class="form-group">
+    <label>Gender</label>
+    <select id="genderInput">
+      <option value="">-- Select Gender --</option>
+      <option value="male">Male</option>
+      <option value="female">Female</option>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label>Time of Entry</label>
+    <input type="time" id="timeInput">
+  </div>
+
+  <button onclick="addEntry()">Add to Population</button>
+  <button onclick="clearAll()">Clear All</button>
+
+  <div class="stats">
+    <div class="stat-box stat-total">Total: <span id="totalCount">0</span></div>
+    <div class="stat-box stat-male">Male: <span id="maleCount">0</span></div>
+    <div class="stat-box stat-female">Female: <span id="femaleCount">0</span></div>
+  </div>
+
+  <h2>Current Entries</h2>
+  <div id="entriesList">
+    <div class="empty-state">No entries yet. Add someone above.</div>
+  </div>
+
+  <br>
+  <button onclick="computePopulation()" id="computeBtn">Compute Full Population Report</button>
+
+</div>
+
+<div id="modalOverlay">
+  <div id="modal">
+    <h2>Population Report</h2>
+    <div id="modalContent"></div>
+    <button id="closeModal" onclick="closeModal()">Close</button>
+  </div>
+</div>
+
+<script>
+    // JS — array to store all entries
+  var entries = [];
+
+  // JS — add entry function
+  function addEntry() {
+    var name = document.getElementById("nameInput").value.trim();
+    var gender = document.getElementById("genderInput").value;
+    var time = document.getElementById("timeInput").value;
+
+    // JS — validate fields
+    if (!name || !gender || !time) {
+      alert("Please fill in all fields before adding.");
+      return;
+    }
+
+    // JS — push entry into array
+    entries.push({ name: name, gender: gender, time: time });
+
+    // DOM — update stats
+    updateStats();
+    renderEntries();
+
+    // DOM — clear fields
+    document.getElementById("nameInput").value = "";
+    document.getElementById("genderInput").value = "";
+    document.getElementById("timeInput").value = "";
+  }
+
+  // JS — clear all entries
+  function clearAll() {
+    if (entries.length === 0) { alert("No entries to clear."); return; }
+    if (confirm("Are you sure?")) {
+      entries = [];
+      updateStats();
+      renderEntries();
+    }
+  }
+
+  // JS — count helpers
+  function getTotal() { return entries.length; }
+  function getMaleCount() { return entries.filter(function(e) { return e.gender === "male"; }).length; }
+  function getFemaleCount() { return entries.filter(function(e) { return e.gender === "female"; }).length; }
+  function getMalePercent() { return getTotal() === 0 ? 0 : ((getMaleCount() / getTotal()) * 100).toFixed(1); }
+  function getFemalePercent() { return getTotal() === 0 ? 0 : ((getFemaleCount() / getTotal()) * 100).toFixed(1); }
+
+  // DOM — update live stats
+  function updateStats() {
+    document.getElementById("totalCount").textContent = getTotal();
+    document.getElementById("maleCount").textContent = getMaleCount();
+    document.getElementById("femaleCount").textContent = getFemaleCount();
+  }
+
+  // DOM — render entries list
+  function renderEntries() {
+    var list = document.getElementById("entriesList");
+    if (entries.length === 0) {
+      list.innerHTML = '<div class="empty-state">No entries yet. Add someone above.</div>';
+      return;
+    }
+    var html = "";
+    for (var i = 0; i < entries.length; i++) {
+      html += '<div class="entry-item">';
+      html += '<span>' + (i + 1) + '. ' + entries[i].name + '</span>';
+      html += '<span class="' + entries[i].gender + '">' + (entries[i].gender === "male" ? "Male" : "Female") + '</span>';
+      html += '<span>' + entries[i].time + '</span>';
+      html += '</div>';
+    }
+    list.innerHTML = html;
+  }
+
+  // AJAX + DOM + JQUERY — compute and show modal
+  function computePopulation() {
+    if (getTotal() === 0) { alert("No entries yet. Please add people first."); return; }
+
+    // AJAX — fetch from external server
+    $.ajax({
+      url: "https://jsonplaceholder.typicode.com/posts/1",
+      method: "GET",
+      success: function() {
+
+        // DOM — build modal content
+        var content = '';
+        content += '<div class="modal-stat"><span class="modal-label">Total Population</span><span class="modal-value" style="color:steelblue">' + getTotal() + '</span></div>';
+        content += '<div class="modal-stat"><span class="modal-label">Total Male</span><span class="modal-value" style="color:steelblue">' + getMaleCount() + '</span></div>';
+        content += '<div class="modal-stat"><span class="modal-label">Total Female</span><span class="modal-value" style="color:#e91e8c">' + getFemaleCount() + '</span></div>';
+        content += '<div class="modal-stat"><span class="modal-label">Male Percentage</span><span class="modal-value" style="color:steelblue">' + getMalePercent() + '%</span></div>';
+        content += '<div class="modal-stat"><span class="modal-label">Female Percentage</span><span class="modal-value" style="color:#e91e8c">' + getFemalePercent() + '%</span></div>';
+
+        document.getElementById("modalContent").innerHTML = content;
+
+        // JQUERY — fade in modal
+        $("#modalOverlay").css("display", "flex").hide().fadeIn(300);
+      },
+      error: function() {
+        alert("Something went wrong. Please try again.");
+      }
+    });
+  }
+  // JQUERY — close modal
+  function closeModal() {
+    $("#modalOverlay").fadeOut(300);
+  }
+
+  // JQUERY — close when clicking outside
+  $(document).ready(function() {
+    $("#modalOverlay").click(function(e) {
+      if ($(e.target).is("#modalOverlay")) {
+        $("#modalOverlay").fadeOut(300);
+      }
+    });
+  });
+
+</script>
+
+</body>
+</html>
