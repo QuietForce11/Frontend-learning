@@ -1,133 +1,176 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>OOP Demo</title>
-
+  <title>OOP Car Demo</title>
   <style>
-    body {
-      font-family: Arial;
-      padding: 20px;
-      background: #f5f7fb;
-    }
-
-    h1 {
-      color: steelblue;
-    }
-
-    .box {
-      background: white;
-      padding: 15px;
-      border-radius: 10px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      margin-top: 15px;
-    }
-
-    button {
-      padding: 8px 14px;
-      margin: 5px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      background: steelblue;
-      color: white;
-    }
-
-    button:hover {
-      background: #274b8a;
-    }
-
-    #result {
-      margin-top: 10px;
-      font-size: 16px;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: Arial; padding: 20px; background: #f5f7fb; }
+    h1 { color: steelblue; margin-bottom: 20px; }
+    h2 { color: #333; border-bottom: 2px solid steelblue; padding-bottom: 5px; margin: 20px 0 10px; }
+    button { padding: 8px 16px; margin: 5px; background: steelblue; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 14px; }
+    button:hover { background: #274b8a; }
+    .result { background: white; padding: 12px; border-radius: 8px; margin-top: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); font-size: 15px; min-height: 40px; line-height: 1.8; }
+    .error { color: red; }
   </style>
 </head>
-
 <body>
 
-<h1>OOP Demo (Encapsulation, Inheritance, Polymorphism)</h1>
+  <h1>OOP Demo — Using a Car</h1>
 
-<div class="box">
-  <button id="runBtn">Run OOP Example</button>
-  <p id="result"></p>
-</div>
-<!-- ======= ABSTRACTION SECTION ======= -->
-<h2>ABSTRACTION</h2>
+  <!-- ENCAPSULATION -->
+  <h2>1. Encapsulation — The Car Engine is Hidden</h2>
+  <button onclick="runEncapsulation()">Start Car & Check Fuel</button>
+  <div id="encapResult" class="result"></div>
 
-<h3>1. Hiding Complexity — ATM</h3>
-<button id="atmBtn">Withdraw Money</button>
-<div id="atmResult" class="result"></div>
+  <!-- INHERITANCE -->
+  <h2>2. Inheritance — Vehicles Share Basic Traits</h2>
+  <button onclick="runInheritance()">Show Vehicle Behaviors</button>
+  <div id="inheritResult" class="result"></div>
 
-<h3>2. Abstract Class — Shape</h3>
-<button id="shapeBtn">Calculate Areas</button>
-<button id="abstractBtn">Try Creating Shape Directly</button>
-<div id="shapeResult" class="result"></div>
+  <!-- ABSTRACTION -->
+  <h2>3. Abstraction — Press Pedal, Don't See Engine</h2>
+  <button onclick="runAbstraction()">Press Accelerator</button>
+  <button onclick="runBrake()">Press Brake</button>
+  <div id="abstractResult" class="result"></div>
 
-<script>
-  // Encapsulation
-  class BankAccount {
-    #balance = 0;
+  <!-- POLYMORPHISM -->
+  <h2>4. Polymorphism — Same Method, Different Behavior</h2>
+  <button onclick="runPolymorphism()">Start All Engines</button>
+  <div id="polyResult" class="result"></div>
 
-    deposit(amount) {
-      this.#balance += amount;
+  <script>
+
+    // ======= ENCAPSULATION =======
+    // Car hides fuel level and engine temp — only accessible through methods
+    class Car {
+      #fuelLevel = 100;    // private — hidden from outside
+      #engineTemp = 0;     // private — hidden from outside
+      #isRunning = false;  // private — hidden from outside
+
+      // Public methods — the only way to interact with the car
+      startCar() {
+        this.#isRunning = true;
+        this.#engineTemp = 90;
+        this.#fuelLevel -= 5;
+        return "Car started successfully!";
+      }
+
+      getFuelLevel() { return this.#fuelLevel + "%"; }
+      getEngineTemp() { return this.#engineTemp + "°C"; }
+      isCarRunning() { return this.#isRunning ? "Yes" : "No"; }
     }
 
-    getBalance() {
-      return this.#balance;
+    function runEncapsulation() {
+      let car = new Car();
+      let startMsg = car.startCar();
+      document.getElementById("encapResult").innerHTML =
+        startMsg + "<br>" +
+        "Fuel Level: " + car.getFuelLevel() + "<br>" +
+        "Engine Temp: " + car.getEngineTemp() + "<br>" +
+        "Car Running: " + car.isCarRunning() + "<br>" +
+        "<em>You cannot access #fuelLevel or #engineTemp directly — they are private and protected!</em>";
     }
-  }
 
-  // Inheritance
-  class Animal {
-    constructor(name) {
-      this.name = name;
+
+    // ======= INHERITANCE =======
+    // Car, Truck and Motorcycle all inherit from Vehicle
+    class Vehicle {
+      constructor(brand) { this.brand = brand; }
+      move() { return this.brand + " is moving forward"; }
+      stop() { return this.brand + " has stopped"; }
     }
 
-    speak() {
-      return this.name + " makes a sound";
+    class Car2 extends Vehicle {
+      // Inherited move() and stop() from Vehicle
+      honk() { return this.brand + " horn: Beep beep!"; }
     }
-  }
 
-  class Dog extends Animal {
-    speak() {
-      return this.name + " barks";
+    class Truck extends Vehicle {
+      // Inherited move() and stop() from Vehicle
+      carry() { return this.brand + " is carrying a heavy load"; }
     }
-  }
 
-  // Polymorphism
-  class Circle {
-    constructor(r) {
-      this.r = r;
+    class Motorcycle extends Vehicle {
+      // Inherited move() and stop() from Vehicle
+      wheelie() { return this.brand + " is doing a wheelie!"; }
     }
-    area() {
-      return Math.PI * this.r * this.r;
+
+    function runInheritance() {
+      let car = new Car2("Toyota");
+      let truck = new Truck("Volvo");
+      let moto = new Motorcycle("Honda");
+
+      document.getElementById("inheritResult").innerHTML =
+        "--- Inherited from Vehicle ---<br>" +
+        car.move() + "<br>" +
+        truck.move() + "<br>" +
+        moto.move() + "<br><br>" +
+        "--- Each one's own behavior ---<br>" +
+        car.honk() + "<br>" +
+        truck.carry() + "<br>" +
+        moto.wheelie();
     }
-  }
+    // ======= ABSTRACTION =======
+    // Driver only sees accelerate and brake — engine complexity is hidden
+    class Car3 {
+      // Hidden complex methods — driver never sees these
+      #injectFuel() { return "Fuel injected into engine"; }
+      #firePistons() { return "Pistons firing"; }
+      #shiftGears() { return "Gears shifting automatically"; }
+      #applyBrakePads() { return "Brake pads applied to wheels"; }
+      #reduceEngineRPM() { return "Engine RPM reducing"; }
 
-  class Rectangle {
-    constructor(w, h) {
-      this.w = w;
-      this.h = h;
+      // Simple interface — driver only uses these
+      accelerate() {
+        this.#injectFuel();
+        this.#firePistons();
+        this.#shiftGears();
+        return "You pressed the accelerator — Car is speeding up! (fuel injected, pistons fired, gears shifted — all hidden from you)";
+      }
+
+      brake() {
+        this.#applyBrakePads();
+        this.#reduceEngineRPM();
+        return "You pressed the brake — Car is slowing down! (brake pads applied, RPM reduced — all hidden from you)";
+      }
     }
-    area() {
-      return this.w * this.h;
+
+    function runAbstraction() {
+      let car = new Car3();
+      document.getElementById("abstractResult").innerHTML = car.accelerate();
     }
-  }
 
-  document.getElementById("runBtn").onclick = function () {
-    let acc = new BankAccount();
-    acc.deposit(1000);
+    function runBrake() {
+      let car = new Car3();
+      document.getElementById("abstractResult").innerHTML = car.brake();
+    }
 
-    let dog = new Dog("Rex");
 
-    let shapes = [new Circle(5), new Rectangle(4, 6)];
+    // ======= POLYMORPHISM =======
+    // Same startEngine method — completely different behavior on each vehicle
+    class CarEngine {
+      startEngine() { return "Car engine: vroom... (smooth and quiet)"; }
+    }
 
-    document.getElementById("result").textContent =
-      "Balance: " + acc.getBalance() +
-      " | " + dog.speak() +
-      " | Areas: " + shapes.map(s => s.area().toFixed(2)).join(", ");
-  };
-</script>
+    class TruckEngine {
+      startEngine() { return "Truck engine: VROOM VROOM! (loud and heavy)"; }
+    }
+
+    class MotorcycleEngine {
+      startEngine() { return "Motorcycle engine: VRRRR! (sharp and aggressive)"; }
+    }
+
+    function runPolymorphism() {
+      let vehicles = [new CarEngine(), new TruckEngine(), new MotorcycleEngine()];
+      let output = "Same method — startEngine() — called on all three:<br><br>";
+      vehicles.forEach(function(v) {
+        output += v.startEngine() + "<br>";
+      });
+      output += "<br><em>Same method name. Different behavior. That is Polymorphism!</em>";
+      document.getElementById("polyResult").innerHTML = output;
+    }
+
+  </script>
 
 </body>
 </html>

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Population Counter — Vue</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Vue 3 Framework -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+<body class="bg-gray-100 p-6 font-sans">
+
+  <!-- VUE APP CONTAINER -->
+  <div id="app" class="max-w-xl mx-auto bg-white rounded-xl shadow-md p-8">
+
+    <h1 class="text-3xl font-bold text-center text-blue-600 mb-2">Population Counter</h1>
+    <p class="text-center text-gray-400 text-sm mb-6">Built with Vue.js</p>
+
+    <!-- FORM -->
+    <h2 class="text-xl font-semibold text-gray-700 border-b-2 border-blue-400 pb-2 mb-4">Add Entry</h2>
+
+    <div class="mb-4">
+      <label class="block text-gray-600 font-semibold mb-1">Full Name</label>
+      <!-- v-model binds input value to Vue data -->
+      <input v-model="name" type="text" placeholder="Enter your name"
+        class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400">
+    </div>
+
+    <div class="mb-4">
+      <label class="block text-gray-600 font-semibold mb-1">Gender</label>
+      <select v-model="gender"
+        class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400">
+        <option value="">-- Select Gender --</option>
+        <option value="male">Male</option>
+        <option value="female">Female</option>
+      </select>
+    </div>
+
+    <div class="mb-4">
+      <label class="block text-gray-600 font-semibold mb-1">Time of Entry</label>
+      <input v-model="time" type="time"
+        class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400">
+    </div>
+
+    <div class="flex gap-2 mb-4">
+      <!-- @click handles button click events in Vue -->
+      <button @click="addEntry"
+        class="bg-blue-500 hover:bg-blue-600 text-white px-5 py-2 rounded-lg font-semibold">
+        Add to Population
+      </button>
+      <button @click="clearAll"
+        class="bg-red-400 hover:bg-red-500 text-white px-5 py-2 rounded-lg font-semibold">
+        Clear All
+      </button>
+    </div>
+
+    <!-- LIVE STATS — auto update when entries change -->
+    <div class="grid grid-cols-3 gap-3 mb-6">
+      <div class="bg-blue-50 text-blue-600 text-center font-bold py-3 rounded-lg">
+        Total<br><span class="text-2xl">{{ entries.length }}</span>
+      </div>
+      <div class="bg-blue-50 text-blue-500 text-center font-bold py-3 rounded-lg">
+        Male<br><span class="text-2xl">{{ maleCount }}</span>
+      </div>
+      <div class="bg-pink-50 text-pink-500 text-center font-bold py-3 rounded-lg">
+        Female<br><span class="text-2xl">{{ femaleCount }}</span>
+      </div>
+    </div>
+
+    <!-- ENTRIES LIST — v-for loops through entries array -->
+    <h2 class="text-xl font-semibold text-gray-700 border-b-2 border-blue-400 pb-2 mb-3">Current Entries</h2>
+    <div class="max-h-48 overflow-y-auto border border-gray-100 rounded-lg">
+      <!-- v-if shows this only when entries is empty -->
+      <p v-if="entries.length === 0" class="text-center text-gray-400 italic p-4">No entries yet.</p>
+      <!-- v-for renders one row per entry -->
+      <div v-for="(entry, i) in entries" :key="i"
+        class="flex justify-between px-4 py-3 border-b border-gray-100 text-sm">
+        <span>{{ i + 1 }}. {{ entry.name }}</span>
+        <span :class="entry.gender === 'male' ? 'text-blue-500 font-bold' : 'text-pink-500 font-bold'">
+          {{ entry.gender === 'male' ? 'Male' : 'Female' }}
+        </span>
+        <span class="text-gray-400">{{ entry.time }}</span>
+      </div>
+    </div>
+
+    <button @click="computePopulation"
+      class="mt-5 w-full bg-green-500 hover:bg-green-600 text-white py-3 rounded-lg font-bold text-lg">
+      Compute Full Population Report
+    </button>
+    <!-- MODAL — v-show toggles visibility -->
+    <div v-show="showModal"
+      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div class="bg-white rounded-xl p-8 w-11/12 max-w-md shadow-2xl text-center">
+        <h2 class="text-2xl font-bold text-blue-600 mb-5">Population Report</h2>
+        <div class="text-left">
+          <div class="flex justify-between py-2 border-b">
+            <span class="text-gray-500">Total Population</span>
+            <span class="font-bold text-blue-600">{{ entries.length }}</span>
+          </div>
+          <div class="flex justify-between py-2 border-b">
+            <span class="text-gray-500">Total Male</span>
+            <span class="font-bold text-blue-500">{{ maleCount }}</span>
+          </div>
+          <div class="flex justify-between py-2 border-b">
+            <span class="text-gray-500">Total Female</span>
+            <span class="font-bold text-pink-500">{{ femaleCount }}</span>
+          </div>
+          <div class="flex justify-between py-2 border-b">
+            <span class="text-gray-500">Male %</span>
+            <span class="font-bold text-blue-500">{{ malePercent }}%</span>
+          </div>
+          <div class="flex justify-between py-2">
+            <span class="text-gray-500">Female %</span>
+            <span class="font-bold text-pink-500">{{ femalePercent }}%</span>
+          </div>
+        </div>
+        <button @click="showModal = false"
+          class="mt-5 bg-red-400 hover:bg-red-500 text-white px-6 py-2 rounded-lg font-semibold">
+          Close
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    const { createApp, ref, computed } = Vue;
+
+    createApp({
+      setup() {
+
+        // Vue reactive data — these update the page automatically when changed
+        const name = ref("");
+        const gender = ref("");
+        const time = ref("");
+        const entries = ref([]);
+        const showModal = ref(false);
+
+        // Computed properties — auto recalculate when entries changes
+        const maleCount = computed(() =>
+          entries.value.filter(e => e.gender === "male").length
+        );
+
+        const femaleCount = computed(() =>
+          entries.value.filter(e => e.gender === "female").length
+        );
+
+        const malePercent = computed(() =>
+          entries.value.length === 0 ? 0 :
+          ((maleCount.value / entries.value.length) * 100).toFixed(1)
+        );
+
+        const femalePercent = computed(() =>
+          entries.value.length === 0 ? 0 :
+          ((femaleCount.value / entries.value.length) * 100).toFixed(1)
+        );
+
+        // Add entry to array
+        function addEntry() {
+          if (!name.value || !gender.value || !time.value) {
+            alert("Please fill in all fields.");
+            return;
+          }
+          entries.value.push({
+            name: name.value,
+            gender: gender.value,
+            time: time.value
+          });
+          // Clear inputs after adding
+          name.value = "";
+          gender.value = "";
+          time.value = "";
+        }
+
+        // Clear all entries
+        function clearAll() {
+          if (entries.value.length === 0) { alert("No entries to clear."); return; }
+          if (confirm("Clear all entries?")) { entries.value = []; }
+        }
+
+        // AJAX using fetch — compute population and show modal
+        function computePopulation() {
+          if (entries.value.length === 0) { alert("No entries yet."); return; }
+          fetch("https://jsonplaceholder.typicode.com/posts/1")
+            .then(res => res.json())
+            .then(() => { showModal.value = true; })
+            .catch(() => { alert("Something went wrong."); });
+        }
+
+        // Return everything so the template can use it
+        return {
+          name, gender, time,
+          entries, showModal,
+          maleCount, femaleCount,
+          malePercent, femalePercent,
+          addEntry, clearAll, computePopulation
+        };
+      }
+    }).mount("#app");
+  </script>
+
+</body>
+</html>
