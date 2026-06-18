@@ -1,191 +1,464 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Design Patterns Demo</title>
-
+  <title>Frontend Design Patterns Demo</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
   <style>
-    body { font-family: Arial; padding: 20px; }
-    h2 { color: steelblue; border-bottom: 2px solid steelblue; padding-bottom: 5px; }
-    button {
-      margin: 5px;
-      padding: 8px 14px;
-      cursor: pointer;
-      background: steelblue;
-      color: white;
-      border: none;
-      border-radius: 4px;
-    }
-    .result {
-      background: #f4f4f4;
-      padding: 10px;
-      border-radius: 4px;
-      margin: 10px 0;
-      min-height: 30px;
-    }
+    .result { min-height: 40px; }
+    .tab-btn { transition: all 0.2s; }
+    .tab-btn.active { background: #3b82f6; color: white; }
+    .state-box { transition: all 0.3s; }
   </style>
 </head>
-<body>
+<body class="bg-gray-100 p-6 font-sans">
 
-<h1>Design Patterns Demo</h1>
+  <h1 class="text-3xl font-bold text-blue-600 mb-2">Frontend Design Patterns Demo</h1>
+  <p class="text-gray-400 mb-8">7 patterns with real world examples</p>
 
-<h2>1. Singleton</h2>
-<button id="singletonBtn">Run Singleton</button>
-<div id="singletonResult" class="result"></div>
+  <!-- ======= PATTERN 1 — PRESENTATIONAL AND CONTAINER ======= -->
+  <div class="bg-white rounded-xl shadow p-6 mb-6">
+    <h2 class="text-xl font-bold text-gray-700 border-b-2 border-blue-400 pb-2 mb-4">
+      Pattern 1 — Presentational and Container
+    </h2>
+    <p class="text-gray-500 mb-3 text-sm">Like a restaurant — waiter shows food, kitchen handles cooking</p>
 
-<h2>2. Factory</h2>
-<button id="emailBtn">Email</button>
-<button id="smsBtn">SMS</button>
-<button id="pushBtn">Push</button>
-<div id="factoryResult" class="result"></div>
+    <!-- Container — handles data and logic -->
+    <div id="userContainer">
+      <button onclick="loadUsers()"
+        class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold">
+        Load Users (Container fetches data)
+      </button>
+      <p id="loadingMsg" class="text-gray-400 mt-2 hidden">Loading...</p>
+      <!-- Presentational — only renders what it receives -->
+      <div id="userListView" class="mt-3 result"></div>
+    </div>
+  </div>
 
-<h2>3. Observer</h2>
-<button id="subscribeBtn">Subscribe</button>
-<button id="notifyBtn">Notify</button>
-<div id="observerResult" class="result"></div>
 
-<h2>4. Strategy</h2>
-<button id="cardBtn">Card</button>
-<button id="paypalBtn">PayPal</button>
-<button id="cryptoBtn">Crypto</button>
-<div id="strategyResult" class="result"></div>
+  <!-- ======= PATTERN 2 — HOOKS AND CUSTOM HOOKS ======= -->
+  <div class="bg-white rounded-xl shadow p-6 mb-6">
+    <h2 class="text-xl font-bold text-gray-700 border-b-2 border-blue-400 pb-2 mb-4">
+      Pattern 2 — Hooks and Custom Hooks
+    </h2>
+    <p class="text-gray-500 mb-3 text-sm">Like a power socket — any component plugs in and gets data</p>
 
-<h2>5. Facade</h2>
-<button id="travelBtn">Book Trip</button>
-<div id="facadeResult" class="result"></div>
+    <button onclick="usePostHook()"
+      class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold">
+      Use Custom Hook (fetch post data)
+    </button>
+    <button onclick="useUserHook()"
+      class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-semibold ml-2">
+      Use Same Hook (fetch user data)
+    </button>
+    <div id="hookResult" class="mt-3 result bg-gray-50 p-3 rounded-lg text-sm"></div>
+  </div>
 
-<script>
 
-// 1. SINGLETON
-class AppSettings {
-  static instance = null;
+  <!-- ======= PATTERN 3 — RENDER PROPS ======= -->
+  <div class="bg-white rounded-xl shadow p-6 mb-6">
+    <h2 class="text-xl font-bold text-gray-700 border-b-2 border-blue-400 pb-2 mb-4">
+      Pattern 3 — Render Props
+    </h2>
+    <p class="text-gray-500 mb-3 text-sm">Like a taxi — driver controls the car, passenger decides destination</p>
 
-  constructor() {
-    if (AppSettings.instance) return AppSettings.instance;
-    this.theme = "dark";
-    AppSettings.instance = this;
-  }
+    <button onclick="renderPropsDemo('card')"
+      class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold">
+      Render as Card
+    </button>
+    <button onclick="renderPropsDemo('list')"
+      class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-lg text-sm font-semibold ml-2">
+      Render as List
+    </button>
+    <button onclick="renderPropsDemo('table')"
+      class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg text-sm font-semibold ml-2">
+      Render as Table
+    </button>
+    <div id="renderResult" class="mt-3 result"></div>
+  </div>
+
+
+  <!-- ======= PATTERN 4 — COMPOUND COMPONENTS ======= -->
+  <div class="bg-white rounded-xl shadow p-6 mb-6">
+    <h2 class="text-xl font-bold text-gray-700 border-b-2 border-blue-400 pb-2 mb-4">
+      Pattern 4 — Compound Components
+    </h2>
+    <p class="text-gray-500 mb-3 text-sm">Like a TV remote — parent manages state, buttons work together</p>
+
+    <!-- Tab parent manages state, tab buttons and panels work together -->
+    <div id="tabsComponent">
+      <div class="flex gap-2 mb-3">
+        <button onclick="switchTab('about')" id="tab-about"
+          class="tab-btn active px-4 py-2 rounded-lg text-sm font-semibold border border-blue-400">
+          About
+        </button>
+        <button onclick="switchTab('skills')" id="tab-skills"
+          class="tab-btn px-4 py-2 rounded-lg text-sm font-semibold border border-blue-400">
+          Skills
+        </button>
+        <button onclick="switchTab('contact')" id="tab-contact"
+          class="tab-btn px-4 py-2 rounded-lg text-sm font-semibold border border-blue-400">
+          Contact
+        </button>
+      </div>
+      <div id="panel-about" class="tab-panel bg-gray-50 p-4 rounded-lg text-sm">
+        About panel — I am a frontend developer learning design patterns.
+      </div>
+      <div id="panel-skills" class="tab-panel hidden bg-gray-50 p-4 rounded-lg text-sm">
+        Skills panel — HTML, CSS, JavaScript, jQuery, Vue, React, Angular.
+      </div>
+      <div id="panel-contact" class="tab-panel hidden bg-gray-50 p-4 rounded-lg text-sm">
+        Contact panel — reach me at developer@example.com
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ======= PATTERN 5 — STATE MACHINES ======= -->
+  <div class="bg-white rounded-xl shadow p-6 mb-6">
+    <h2 class="text-xl font-bold text-gray-700 border-b-2 border-blue-400 pb-2 mb-4">
+      Pattern 5 — State Machines
+    </h2>
+    <p class="text-gray-500 mb-3 text-sm">Like a traffic light — fixed states, predictable transitions</p>
+
+    <div class="flex items-center gap-4 mb-4">
+      <!-- Traffic light visual -->
+      <div class="flex flex-col gap-2 bg-gray-800 p-3 rounded-xl">
+        <div id="light-red" class="w-10 h-10 rounded-full bg-red-500 opacity-100"></div>
+        <div id="light-yellow" class="w-10 h-10 rounded-full bg-yellow-400 opacity-20"></div>
+        <div id="light-green" class="w-10 h-10 rounded-full bg-green-500 opacity-20"></div>
+      </div>
+      <div>
+        <p class="font-bold text-gray-700">Current State: <span id="currentState" class="text-blue-600">RED</span></p>
+        <p class="text-gray-500 text-sm mt-1" id="stateMsg">Cars must stop</p>
+      </div>
+    </div>
+
+    <button onclick="nextState()"
+      class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold">
+      Next State (Transition)
+    </button>
+    <p class="text-gray-400 text-xs mt-2">Only valid transitions allowed — just like a real traffic light</p>
+  </div>
+
+
+  <!-- ======= PATTERN 6 — FEATURE ORIENTED SLICES ======= -->
+  <div class="bg-white rounded-xl shadow p-6 mb-6">
+    <h2 class="text-xl font-bold text-gray-700 border-b-2 border-blue-400 pb-2 mb-4">
+      Pattern 6 — Feature Oriented Slices
+    </h2>
+    <p class="text-gray-500 mb-3 text-sm">Like a supermarket breakfast aisle — everything related lives together</p>
+
+    <div class="grid grid-cols-2 gap-3 mb-4">
+      <!-- Bad structure -->
+      <div class="bg-red-50 p-3 rounded-lg">
+        <p class="font-bold text-red-500 text-sm mb-2">❌ By Type (Bad)</p>
+        <div class="text-xs text-gray-600 font-mono">
+          <p>📁 components/</p>
+          <p class="ml-3">UserCard.js</p>
+          <p class="ml-3">CartItem.js</p>
+          <p>📁 hooks/</p>
+          <p class="ml-3">useUser.js</p>
+          <p class="ml-3">useCart.js</p>
+          <p>📁 api/</p>
+          <p class="ml-3">userApi.js</p>
+          <p class="ml-3">cartApi.js</p>
+        </div>
+      </div>
+      <!-- Good structure -->
+      <div class="bg-green-50 p-3 rounded-lg">
+        <p class="font-bold text-green-500 text-sm mb-2">✅ By Feature (Good)</p>
+        <div class="text-xs text-gray-600 font-mono">
+          <p>📁 features/</p>
+          <p class="ml-3">📁 user/</p>
+          <p class="ml-6">UserCard.js</p>
+          <p class="ml-6">useUser.js</p>
+          <p class="ml-6">userApi.js</p>
+          <p class="ml-3">📁 cart/</p>
+          <p class="ml-6">CartItem.js</p>
+          <p class="ml-6">useCart.js</p>
+          <p class="ml-6">cartApi.js</p>
+        </div>
+      </div>
+    </div>
+    <button onclick="showFeatureDemo()"
+      class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold">
+      Show Feature Slice in Action
+    </button>
+    <div id="featureResult" class="mt-3 result"></div>
+  </div>
+
+
+  <!-- ======= PATTERN 7 — FEATURE SLICED DESIGN ======= -->
+  <div class="bg-white rounded-xl shadow p-6 mb-6">
+    <h2 class="text-xl font-bold text-gray-700 border-b-2 border-blue-400 pb-2 mb-4">
+      Pattern 7 — Feature Sliced Design
+    </h2>
+    <p class="text-gray-500 mb-3 text-sm">Like a skyscraper blueprint — each layer has a purpose, built in order</p>
+
+    <!-- FSD Layer visualization -->
+    <div class="flex flex-col gap-1 mb-4">
+      <div class="bg-purple-100 text-purple-700 text-center py-2 rounded font-semibold text-sm">
+        APP — app wide settings, routing, providers
+      </div>
+      <div class="bg-blue-100 text-blue-700 text-center py-2 rounded font-semibold text-sm">
+        PAGES — full page components
+      </div>
+      <div class="bg-cyan-100 text-cyan-700 text-center py-2 rounded font-semibold text-sm">
+        WIDGETS — large reusable UI blocks
+      </div>
+      <div class="bg-green-100 text-green-700 text-center py-2 rounded font-semibold text-sm">
+        FEATURES — user interactions and flows
+      </div>
+      <div class="bg-yellow-100 text-yellow-700 text-center py-2 rounded font-semibold text-sm">
+        ENTITIES — business domain objects
+      </div>
+      <div class="bg-orange-100 text-orange-700 text-center py-2 rounded font-semibold text-sm">
+        SHARED — reusable utilities and UI primitives
+      </div>
+      <p class="text-center text-gray-400 text-xs mt-1">⬆️ Higher layers depend on lower ones — never reverse</p>
+    </div>
+
+    <button onclick="showFSDDemo()"
+      class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold">
+      Show FSD Flow in Action
+    </button>
+    <div id="fsdResult" class="mt-3 result bg-gray-50 p-3 rounded-lg text-sm hidden"></div>
+  </div>
+
+
+  <script>
+
+    // ======= PATTERN 1 — PRESENTATIONAL AND CONTAINER =======
+
+    // Container — handles data fetching and logic
+    function loadUsers() {
+      $("#loadingMsg").removeClass("hidden");
+      $("#userListView").html("");
+
+      // Container fetches data via AJAX
+      $.ajax({
+        url: "https://jsonplaceholder.typicode.com/users?_limit=3",
+        method: "GET",
+        success: function(users) {
+          $("#loadingMsg").addClass("hidden");
+          // Container passes data to presentational renderer
+          renderUserList(users);
+        },
+        error: function() {
+          $("#loadingMsg").addClass("hidden");
+          $("#userListView").html('<p class="text-red-400">Failed to load users.</p>');
+        }
+      });
+    }
+
+    // Presentational — only handles how data looks
+   function renderUserList(users) {
+  let html = '<div class="space-y-2">';
+
+  users.forEach(function(user) {
+    html += `
+      <div class="flex items-center gap-3 bg-blue-50 p-3 rounded-lg">
+        <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold text-sm">
+          ${user.name[0]}
+        </div>
+        <div>
+          <p class="font-semibold text-gray-700 text-sm">${user.name}</p>
+          <p class="text-gray-400 text-xs">${user.email}</p>
+        </div>
+      </div>
+    `;
+  });
+
+  html += '</div>';
+  $("#userListView").html(html);
 }
 
-document.getElementById("singletonBtn").onclick = function() {
-  let a = new AppSettings();
-  let b = new AppSettings();
-  document.getElementById("singletonResult").textContent =
-    "Same instance: " + (a === b);
-};
+
+    // ======= PATTERN 2 — CUSTOM HOOKS =======
+
+    // Custom hook — reusable fetch logic any component can use
+    function useFetch(url, callback) {
+      $("#hookResult").html('<p class="text-gray-400">Loading...</p>');
+      $.ajax({
+        url: url,
+        method: "GET",
+        success: function(data) { callback(data); },
+        error: function() {
+          $("#hookResult").html('<p class="text-red-400">Error fetching data.</p>');
+        }
+      });
+    }
+    // Component 1 plugs into the hook
+    function usePostHook() {
+      useFetch("https://jsonplaceholder.typicode.com/posts/1", function(data) {
+        $("#hookResult").html(
+          '<p class="font-semibold text-gray-700">Post fetched using hook:</p>' +
+          '<p class="text-gray-600 mt-1">' + data.title + '</p>'
+        );
+      });
+    }
+
+    // Component 2 uses the exact same hook
+    function useUserHook() {
+      useFetch("https://jsonplaceholder.typicode.com/users/1", function(data) {
+        $("#hookResult").html(
+          '<p class="font-semibold text-gray-700">User fetched using same hook:</p>' +
+          '<p class="text-gray-600 mt-1">' + data.name + ' — ' + data.email + '</p>'
+        );
+      });
+    }
 
 
-// 2. FACTORY
-class NotificationFactory {
-  static create(type) {
-    if (type === "email") return "Email sent";
-    if (type === "sms") return "SMS sent";
-    if (type === "push") return "Push sent";
-  }
-}
+    // ======= PATTERN 3 — RENDER PROPS =======
 
-document.getElementById("emailBtn").onclick = function() {
-  document.getElementById("factoryResult").textContent =
-    NotificationFactory.create("email");
-};
+    // Core component — controls data fetching behavior
+    // Consumer decides how to render the result
+    var renderData = { name: "John Doe", role: "Developer", company: "TechCorp" };
 
-document.getElementById("smsBtn").onclick = function() {
-  document.getElementById("factoryResult").textContent =
-    NotificationFactory.create("sms");
-};
-
-document.getElementById("pushBtn").onclick = function() {
-  document.getElementById("factoryResult").textContent =
-    NotificationFactory.create("push");
-};
-
-
-// 3. OBSERVER
-class Channel {
-  constructor() {
-    this.subscribers = [];
-  }
-
-  subscribe(name) {
-    this.subscribers.push(name);
-  }
-
-  notify(msg) {
-    return this.subscribers.map(s => s + " got " + msg).join(" | ");
-  }
-}
-
-let channel = new Channel();
-
-document.getElementById("subscribeBtn").onclick = function() {
-  channel = new Channel();
-  channel.subscribe("John");
-  channel.subscribe("Jane");
-  document.getElementById("observerResult").textContent = "Subscribed!";
-};
-
-document.getElementById("notifyBtn").onclick = function() {
-  document.getElementById("observerResult").textContent =
-    channel.notify("New Video");
-};
+    function renderPropsDemo(renderType) {
+      // Same data — consumer decides how to render it
+      if (renderType === 'card') {
+        $("#renderResult").html(`
+          <div class="bg-blue-50 p-4 rounded-xl text-center">
+            <div class="w-12 h-12 bg-blue-500 rounded-full mx-auto mb-2 flex items-center justify-center text-white font-bold">JD</div>
+            <p class="font-bold text-gray-700">${renderData.name}</p>
+            <p class="text-gray-400 text-sm">${renderData.role} at ${renderData.company}</p>
+          </div>
+        `);
+      } else if (renderType === 'list') {
+        $("#renderResult").html(`
+          <ul class="space-y-1 text-sm">
+            <li class="flex gap-2"><span class="font-semibold text-gray-600">Name:</span> ${renderData.name}</li>
+            <li class="flex gap-2"><span class="font-semibold text-gray-600">Role:</span> ${renderData.role}</li>
+            <li class="flex gap-2"><span class="font-semibold text-gray-600">Company:</span> ${renderData.company}</li>
+          </ul>
+        `);
+      } else {
+        $("#renderResult").html(`
+          <table class="w-full text-sm border-collapse">
+            <tr class="bg-gray-100"><th class="p-2 text-left border">Field</th><th class="p-2 text-left border">Value</th></tr>
+            <tr><td class="p-2 border font-semibold">Name</td><td class="p-2 border">${renderData.name}</td></tr>
+            <tr><td class="p-2 border font-semibold">Role</td><td class="p-2 border">${renderData.role}</td></tr>
+            <tr><td class="p-2 border font-semibold">Company</td><td class="p-2 border">${renderData.company}</td></tr>
+          </table>
+        `);
+      }
+    }
 
 
-// 4. STRATEGY
-class Payment {
-  constructor(method) {
-    this.method = method;
-  }
+    // ======= PATTERN 4 — COMPOUND COMPONENTS =======
 
-  pay(amount) {
-    return this.method(amount);
-  }
-}
-
-const card = amt => "Paid ₦" + amt + " with Card";
-const paypal = amt => "Paid ₦" + amt + " with PayPal";
-const crypto = amt => "Paid ₦" + amt + " with Crypto";
-
-document.getElementById("cardBtn").onclick = function() {
-  document.getElementById("strategyResult").textContent =
-    new Payment(card).pay(5000);
-};
-
-document.getElementById("paypalBtn").onclick = function() {
-  document.getElementById("strategyResult").textContent =
-    new Payment(paypal).pay(5000);
-};
-
-document.getElementById("cryptoBtn").onclick = function() {
-  document.getElementById("strategyResult").textContent =
-    new Payment(crypto).pay(5000);
-};
+    // Tab parent manages which tab is active
+    // Tab buttons and panels are child components working together
+    function switchTab(tabName) {
+      // Hide all panels
+      $(".tab-panel").addClass("hidden");
+      // Remove active from all buttons
+      $(".tab-btn").removeClass("active");
+      // Show selected panel
+      $("#panel-" + tabName).removeClass("hidden");
+      // Set active button
+      $("#tab-" + tabName).addClass("active");
+    }
 
 
-// 5. FACADE
-class Flight { book() { return "Flight booked"; } }
-class Hotel { book() { return "Hotel booked"; } }
-class Car { book() { return "Car rented"; } }
+    // ======= PATTERN 5 — STATE MACHINES =======
 
-class TravelFacade {
-  constructor() {
-    this.flight = new Flight();
-    this.hotel = new Hotel();
-    this.car = new Car();
-  }
+    // State machine — only valid transitions allowed
+    var states = {
+      RED: {
+        msg: "Cars must stop",
+        next: "GREEN",
+        lights: { red: 1, yellow: 0.2, green: 0.2 }
+      },
+      GREEN: {
+        msg: "Cars can go",
+        next: "YELLOW",
+        lights: { red: 0.2, yellow: 0.2, green: 1 }
+      },
+      YELLOW: {
+        msg: "Cars must slow down",
+        next: "RED",
+        lights: { red: 0.2, yellow: 1, green: 0.2 }
+      }
+    };
 
-  bookTrip() {
-    return this.flight.book() + " | " +
-           this.hotel.book() + " | " +
-           this.car.book();
-  }
-}
+    var currentState = "RED";
 
-document.getElementById("travelBtn").onclick = function() {
-  let trip = new TravelFacade();
-  document.getElementById("facadeResult").textContent =
-    trip.bookTrip();
-};
+    function nextState() {
+      // Only move to valid next state — no skipping
+      currentState = states[currentState].next;
+      var state = states[currentState];
+      // Update display
+      $("#currentState").text(currentState);
+      $("#stateMsg").text(state.msg);
+      $("#light-red").css("opacity", state.lights.red);
+      $("#light-yellow").css("opacity", state.lights.yellow);
+      $("#light-green").css("opacity", state.lights.green);
+    }
 
-</script>
+
+    // ======= PATTERN 6 — FEATURE ORIENTED SLICES =======
+
+    // Simulating feature slices — each feature owns its own logic
+    var features = {
+      user: {
+        getData: function() {
+          return { name: "John Doe", role: "Admin" };
+        },
+        render: function(data) {
+          return '<p class="font-semibold">User Feature Slice:</p><p>Name: ' + data.name + ' | Role: ' + data.role + '</p>';
+        }
+      },
+      cart: {
+        getData: function() {
+          return { items: 3, total: 150 };
+        },
+        render: function(data) {
+          return '<p class="font-semibold mt-2">Cart Feature Slice:</p><p>Items: ' + data.items + ' | Total: $' + data.total + '</p>';
+        }
+      }
+    };
+
+    function showFeatureDemo() {
+      var userData = features.user.getData();
+      var cartData = features.cart.getData();
+      $("#featureResult").html(
+        '<div class="bg-gray-50 p-3 rounded-lg text-sm">' +
+        features.user.render(userData) +
+        features.cart.render(cartData) +
+        '<p class="text-gray-400 text-xs mt-2">Each feature owns its own data and rendering — fully independent</p>' +
+        '</div>'
+      );
+    }
+
+
+    // ======= PATTERN 7 — FEATURE SLICED DESIGN =======
+
+    function showFSDDemo() {
+      var layers = [
+        { name: "SHARED", color: "text-orange-600", desc: "useFetch hook, Button component, utility functions" },
+        { name: "ENTITIES", color: "text-yellow-600", desc: "User entity, Product entity, Order entity" },
+        { name: "FEATURES", color: "text-green-600", desc: "Login feature, Add to cart feature, Search feature" },
+        { name: "WIDGETS", color: "text-cyan-600", desc: "Header widget, Sidebar widget, Product grid widget" },
+        { name: "PAGES", color: "text-blue-600", desc: "Home page, Profile page, Checkout page" },
+        { name: "APP", color: "text-purple-600", desc: "App router, global providers, theme setup" }
+      ];
+
+      var html = '<p class="font-semibold text-gray-700 mb-2">FSD layers — each builds on the one below:</p>';
+      layers.forEach(function(layer) {
+        html += '<div class="flex gap-2 items-start mb-1">' +
+                '<span class="font-bold text-xs w-20 ' + layer.color + '">' + layer.name + '</span>' +
+                '<span class="text-gray-500 text-xs">→ ' + layer.desc + '</span>' +
+                '</div>';
+      });
+      html += '<p class="text-gray-400 text-xs mt-2">Higher layers use lower layers — never the reverse. This prevents circular dependencies.</p>';
+
+      $("#fsdResult").html(html).removeClass("hidden");
+    }
+
+  </script>
 
 </body>
 </html>

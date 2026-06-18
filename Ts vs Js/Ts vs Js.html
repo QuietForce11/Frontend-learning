@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>TypeScript vs JavaScript Demo</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-6 font-sans">
+
+  <h1 class="text-3xl font-bold text-blue-600 mb-2">TypeScript vs JavaScript Demo</h1>
+  <p class="text-gray-400 mb-8">Same code — showing the difference between JS and TS</p>
+
+  <!-- ======= SECTION 1 — DYNAMIC VS STATIC TYPING ======= -->
+  <div class="bg-white rounded-xl shadow p-6 mb-6">
+    <h2 class="text-xl font-bold text-gray-700 border-b-2 border-blue-400 pb-2 mb-4">
+      1. Dynamic vs Static Typing
+    </h2>
+    <div class="grid grid-cols-2 gap-4 mb-4">
+      <!-- JavaScript -->
+      <div class="bg-yellow-50 p-4 rounded-lg">
+        <p class="font-bold text-yellow-600 mb-2">JavaScript — No Types</p>
+        <pre class="text-xs text-gray-700 whitespace-pre-wrap">// JS — no type defined
+let age = 25;
+age = "twenty five"; // allowed!
+age = true; // also allowed!
+// No error — anything goes</pre>
+      </div>
+      <!-- TypeScript equivalent -->
+      <div class="bg-blue-50 p-4 rounded-lg">
+        <p class="font-bold text-blue-600 mb-2">TypeScript — Types Defined</p>
+        <pre class="text-xs text-gray-700 whitespace-pre-wrap">// TS — type defined as number
+let age: number = 25;
+age = "twenty five"; // ERROR!
+age = true; // ERROR!
+// TS catches this before running</pre>
+      </div>
+    </div>
+    <button onclick="showTypingDemo()"
+      class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold">
+      See Typing in Action
+    </button>
+    <div id="typingResult" class="mt-3 bg-gray-50 p-3 rounded-lg text-sm hidden"></div>
+  </div>
+
+
+  <!-- ======= SECTION 2 — FUNCTION TYPES ======= -->
+  <div class="bg-white rounded-xl shadow p-6 mb-6">
+    <h2 class="text-xl font-bold text-gray-700 border-b-2 border-blue-400 pb-2 mb-4">
+      2. Function Parameters
+    </h2>
+    <div class="grid grid-cols-2 gap-4 mb-4">
+      <div class="bg-yellow-50 p-4 rounded-lg">
+        <p class="font-bold text-yellow-600 mb-2">JavaScript</p>
+        <pre class="text-xs text-gray-700 whitespace-pre-wrap">// JS — no type checking
+function add(a, b) {
+  return a + b;
+}
+
+add(5, 10);     // 15 ✅
+add("5", 10);   // "510" ❌ bug!
+add(5, "ten");  // "5ten" ❌ bug!</pre>
+      </div>
+      <div class="bg-blue-50 p-4 rounded-lg">
+        <p class="font-bold text-blue-600 mb-2">TypeScript</p>
+        <pre class="text-xs text-gray-700 whitespace-pre-wrap">// TS — types enforced
+function add(a: number, b: number) {
+  return a + b;
+}
+
+add(5, 10);     // 15 ✅
+add("5", 10);   // ERROR! ✅
+add(5, "ten");  // ERROR! ✅</pre>
+      </div>
+    </div>
+    <button onclick="showFunctionDemo()"
+      class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold">
+      See Function Types in Action
+    </button>
+    <div id="functionResult" class="mt-3 bg-gray-50 p-3 rounded-lg text-sm hidden"></div>
+  </div>
+
+
+  <!-- ======= SECTION 3 — INTERFACES ======= -->
+  <div class="bg-white rounded-xl shadow p-6 mb-6">
+    <h2 class="text-xl font-bold text-gray-700 border-b-2 border-blue-400 pb-2 mb-4">
+      3. Interfaces (TypeScript Only)
+    </h2>
+    <div class="grid grid-cols-2 gap-4 mb-4">
+      <div class="bg-yellow-50 p-4 rounded-lg">
+        <p class="font-bold text-yellow-600 mb-2">JavaScript — No Interface</p>
+        <pre class="text-xs text-gray-700 whitespace-pre-wrap">// JS — no structure enforced
+function greetUser(user) {
+  return "Hello " + user.name;
+}
+
+// Missing name? No error until runtime
+greetUser({});  // "Hello undefined"
+greetUser({ age: 20 }); // "Hello undefined"</pre>
+      </div>
+      <div class="bg-blue-50 p-4 rounded-lg">
+        <p class="font-bold text-blue-600 mb-2">TypeScript — Interface Defined</p>
+        <pre class="text-xs text-gray-700 whitespace-pre-wrap">// TS — interface enforces structure
+interface User {
+  name: string;
+  age: number;
+}
+
+function greetUser(user: User) {
+  return "Hello " + user.name;
+}
+greetUser({});         // ERROR! ✅
+greetUser({ age: 20 }); // ERROR! ✅
+greetUser({ name: "John", age: 20 }); // ✅</pre>
+      </div>
+    </div>
+    <button onclick="showInterfaceDemo()"
+      class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold">
+      See Interface in Action
+    </button>
+    <div id="interfaceResult" class="mt-3 bg-gray-50 p-3 rounded-lg text-sm hidden"></div>
+  </div>
+
+
+  <!-- ======= SECTION 4 — ERROR CATCHING ======= -->
+  <div class="bg-white rounded-xl shadow p-6 mb-6">
+    <h2 class="text-xl font-bold text-gray-700 border-b-2 border-blue-400 pb-2 mb-4">
+      4. Error Catching — Compile Time vs Runtime
+    </h2>
+    <div class="grid grid-cols-2 gap-4 mb-4">
+      <div class="bg-yellow-50 p-4 rounded-lg">
+        <p class="font-bold text-yellow-600 mb-2">JavaScript — Runtime Error</p>
+        <pre class="text-xs text-gray-700 whitespace-pre-wrap">// JS — error only shows when code runs
+let user = null;
+console.log(user.name);
+// Error: Cannot read property
+// 'name' of null
+// — shows up in production!</pre>
+      </div>
+      <div class="bg-blue-50 p-4 rounded-lg">
+        <p class="font-bold text-blue-600 mb-2">TypeScript — Compile Time Error</p>
+        <pre class="text-xs text-gray-700 whitespace-pre-wrap">// TS — error caught before running
+let user: User | null = null;
+console.log(user.name);
+// ERROR: Object is possibly null
+// — caught during development!</pre>
+      </div>
+    </div>
+    <button onclick="showErrorDemo()"
+      class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold">
+      See Error Catching in Action
+    </button>
+    <div id="errorResult" class="mt-3 bg-gray-50 p-3 rounded-lg text-sm hidden"></div>
+  </div>
+
+
+  <!-- ======= SECTION 5 — SUMMARY COMPARISON ======= -->
+  <div class="bg-white rounded-xl shadow p-6 mb-6">
+    <h2 class="text-xl font-bold text-gray-700 border-b-2 border-blue-400 pb-2 mb-4">
+      5. Side by Side Summary
+    </h2>
+    <button onclick="showSummary()"
+      class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-semibold">
+      Show Full Comparison
+    </button>
+    <div id="summaryResult" class="mt-3 hidden">
+      <table class="w-full text-sm border-collapse">
+        <tr class="bg-gray-100">
+          <th class="p-3 text-left border border-gray-200">Feature</th>
+          <th class="p-3 text-left border border-gray-200 text-yellow-600">JavaScript</th>
+          <th class="p-3 text-left border border-gray-200 text-blue-600">TypeScript</th>
+        </tr>
+        <tr>
+          <td class="p-3 border border-gray-200 font-semibold">Typing</td>
+          <td class="p-3 border border-gray-200">Dynamic — no types needed</td>
+          <td class="p-3 border border-gray-200">Static — types required</td>
+        </tr>
+        <tr class="bg-gray-50">
+          <td class="p-3 border border-gray-200 font-semibold">Errors caught</td>
+          <td class="p-3 border border-gray-200">At runtime — after code runs</td>
+          <td class="p-3 border border-gray-200">At compile time — before code runs</td>
+        </tr>
+        <tr>
+          <td class="p-3 border border-gray-200 font-semibold">Interfaces</td>
+          <td class="p-3 border border-gray-200">Not supported</td>
+          <td class="p-3 border border-gray-200">Fully supported</td>
+        </tr>
+        <tr class="bg-gray-50">
+          <td class="p-3 border border-gray-200 font-semibold">Browser</td>
+          <td class="p-3 border border-gray-200">Runs directly</td>
+          <td class="p-3 border border-gray-200">Must compile to JS first</td>
+        </tr>
+        <tr>
+          <td class="p-3 border border-gray-200 font-semibold">Best for</td>
+          <td class="p-3 border border-gray-200">Small projects, beginners</td>
+          <td class="p-3 border border-gray-200">Large projects, teams</td>
+        </tr>
+        <tr class="bg-gray-50">
+          <td class="p-3 border border-gray-200 font-semibold">File extension</td>
+          <td class="p-3 border border-gray-200">.js</td>
+          <td class="p-3 border border-gray-200">.ts or .tsx</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+
+  <script>
+
+    // 1. DYNAMIC VS STATIC TYPING
+    function showTypingDemo() {
+      // JavaScript allows any type
+      var jsAge = 25;
+      var jsAge2 = "twenty five"; // no error
+      var jsAge3 = true; // no error
+
+      document.getElementById("typingResult").innerHTML =
+        '<p class="font-semibold text-yellow-600">JavaScript result:</p>' +
+        '<p>age = 25 → then reassigned to "twenty five" → then to true</p>' +
+        '<p>No errors! JavaScript allows anything.</p>' +
+        '<br>' +
+        '<p class="font-semibold text-blue-600">TypeScript would catch:</p>' +
+        '<p class="text-red-500">ERROR: Type "string" is not assignable to type "number"</p>' +
+        '<p class="text-red-500">ERROR: Type "boolean" is not assignable to type "number"</p>' +
+        '<p class="text-green-600 mt-1">TypeScript catches these BEFORE the code runs!</p>';
+      document.getElementById("typingResult").classList.remove("hidden");
+    }
+
+    // 2. FUNCTION PARAMETER TYPES
+    function showFunctionDemo() {
+      // JavaScript add — no type checking
+      function jsAdd(a, b) { return a + b; }
+
+      var result1 = jsAdd(5, 10);      // 15
+      var result2 = jsAdd("5", 10);    // "510" — string concatenation bug!
+      var result3 = jsAdd(5, "ten");   // "5ten" — bug!
+
+      document.getElementById("functionResult").innerHTML =
+        '<p class="font-semibold text-yellow-600">JavaScript results:</p>' +
+        '<p>add(5, 10) = ' + result1 + ' ✅</p>' +
+        '<p>add("5", 10) = "' + result2 + '" ❌ Bug — string concatenation!</p>' +
+        '<p>add(5, "ten") = "' + result3 + '" ❌ Bug — unexpected result!</p>' +
+        '<br>' +
+        '<p class="font-semibold text-blue-600">TypeScript would catch:</p>' +
+        '<p class="text-red-500">ERROR: Argument of type "string" is not assignable to parameter of type "number"</p>' +
+        '<p class="text-green-600 mt-1">Both bugs caught before code runs!</p>';
+      document.getElementById("functionResult").classList.remove("hidden");
+    }
+
+    // 3. INTERFACES
+    function showInterfaceDemo() {
+      // JavaScript — no interface enforcement
+      function jsGreet(user) {
+        return "Hello " + user.name;
+      }
+
+      var result1 = jsGreet({ name: "John", age: 20 }); // works
+      var result2 = jsGreet({}); // undefined — no error!
+      var result3 = jsGreet({ age: 20 }); // undefined — no error!
+
+      document.getElementById("interfaceResult").innerHTML =
+        '<p class="font-semibold text-yellow-600">JavaScript results:</p>' +
+        '<p>greetUser({name:"John", age:20}) = "' + result1 + '" ✅</p>' +
+        '<p>greetUser({}) = "' + result2 + '" ❌ No error but wrong result!</p>' +
+        '<p>greetUser({age:20}) = "' + result3 + '" ❌ No error but wrong result!</p>' +
+        '<br>' +
+        '<p class="font-semibold text-blue-600">TypeScript Interface would catch:</p>' +
+        '<p class="text-red-500">ERROR: Argument of type {} is not assignable to type User</p>' +
+        '<p class="text-red-500">ERROR: Property "name" is missing in type {age: number}</p>' +
+        '<p class="text-green-600 mt-1">Interface enforces the correct structure every time!</p>';
+      document.getElementById("interfaceResult").classList.remove("hidden");
+    }
+
+    // 4. ERROR CATCHING
+    function showErrorDemo() {
+      // JavaScript runtime error simulation
+      var jsResult;
+      try {
+        var user = null;
+        jsResult = user.name; // runtime error
+      } catch(e) {
+        jsResult = "Runtime Error: " + e.message;
+      }
+      document.getElementById("errorResult").innerHTML =
+        '<p class="font-semibold text-yellow-600">JavaScript:</p>' +
+        '<p class="text-red-500">' + jsResult + '</p>' +
+        '<p class="text-gray-500 text-xs">This error only shows AFTER the code runs — could be in front of users!</p>' +
+        '<br>' +
+        '<p class="font-semibold text-blue-600">TypeScript:</p>' +
+        '<p class="text-green-600">ERROR: Object is possibly null — caught BEFORE the code runs</p>' +
+        '<p class="text-gray-500 text-xs">TypeScript forces you to handle the null case during development!</p>';
+      document.getElementById("errorResult").classList.remove("hidden");
+    }
+
+    // 5. SUMMARY
+    function showSummary() {
+      document.getElementById("summaryResult").classList.remove("hidden");
+    }
+
+  </script>
+
+</body>
+</html>

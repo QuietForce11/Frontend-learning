@@ -1,0 +1,330 @@
+API DEMO
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>API Demo</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+</head>
+<body class="bg-gray-100 p-6 font-sans">
+
+  <h1 class="text-3xl font-bold text-blue-600 mb-2">API Demo</h1>
+  <p class="text-gray-400 mb-8">Showing REST API concepts in action</p>
+
+
+  <!-- ======= SECTION 1 — WHAT IS AN API ======= -->
+  <div class="bg-white rounded-xl shadow p-6 mb-6">
+    <h2 class="text-xl font-bold text-gray-700 border-b-2 border-blue-400 pb-2 mb-4">
+      1. What is an API — The Waiter Analogy
+    </h2>
+    <div class="flex gap-4 mb-4 text-center text-sm">
+      <div class="flex-1 bg-blue-50 p-3 rounded-lg">
+        <p class="text-2xl mb-1">👤</p>
+        <p class="font-bold text-blue-600">You (Client)</p>
+        <p class="text-gray-500">Your app or browser</p>
+      </div>
+      <div class="flex-1 flex items-center justify-center">
+        <div class="text-center">
+          <p class="text-2xl mb-1">🤵</p>
+          <p class="font-bold text-green-600">API (Waiter)</p>
+          <p class="text-gray-500">The middleman</p>
+          <p class="text-xs text-gray-400 mt-1">→ Request →</p>
+          <p class="text-xs text-gray-400">← Response ←</p>
+        </div>
+      </div>
+      <div class="flex-1 bg-orange-50 p-3 rounded-lg">
+        <p class="text-2xl mb-1">🍳</p>
+        <p class="font-bold text-orange-600">Server + Database</p>
+        <p class="text-gray-500">The kitchen</p>
+      </div>
+    </div>
+    <button onclick="showApiConcept()"
+      class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold">
+      See API Request Flow
+    </button>
+    <div id="apiConceptResult" class="mt-3 hidden"></div>
+  </div>
+
+
+  <!-- ======= SECTION 2 — REST API — GET REQUEST ======= -->
+  <div class="bg-white rounded-xl shadow p-6 mb-6">
+    <h2 class="text-xl font-bold text-gray-700 border-b-2 border-blue-400 pb-2 mb-4">
+      2. REST API — GET Request (Fetch Data)
+    </h2>
+    <p class="text-gray-500 text-sm mb-3">Endpoint: https://jsonplaceholder.typicode.com/users/1</p>
+    <button onclick="getRequest()"
+      class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-semibold">
+      GET — Fetch User
+    </button>
+    <div id="getResult" class="mt-3 hidden"></div>
+  </div>
+
+
+  <!-- ======= SECTION 3 — REST API — POST REQUEST ======= -->
+  <div class="bg-white rounded-xl shadow p-6 mb-6">
+    <h2 class="text-xl font-bold text-gray-700 border-b-2 border-blue-400 pb-2 mb-4">
+      3. REST API — POST Request (Send Data)
+    </h2>
+    <p class="text-gray-500 text-sm mb-3">Endpoint: https://jsonplaceholder.typicode.com/posts</p>
+    <button onclick="postRequest()"
+      class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold">
+      POST — Create New Post
+    </button>
+    <div id="postResult" class="mt-3 hidden"></div>
+  </div>
+
+
+  <!-- ======= SECTION 4 — STATUS CODES ======= -->
+  <div class="bg-white rounded-xl shadow p-6 mb-6">
+    <h2 class="text-xl font-bold text-gray-700 border-b-2 border-blue-400 pb-2 mb-4">
+      4. HTTP Status Codes
+    </h2>
+    <div class="flex gap-2 mb-4 flex-wrap">
+      <button onclick="showStatus(200)"
+        class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-semibold">
+        200 — OK
+      </button>
+      <button onclick="showStatus(201)"
+        class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold">
+        201 — Created
+      </button>
+      <button onclick="showStatus(404)"
+        class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg text-sm font-semibold">
+        404 — Not Found
+        </button>
+      <button onclick="showStatus(401)"
+        class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg text-sm font-semibold">
+        401 — Unauthorized
+      </button>
+      <button onclick="showStatus(500)"
+        class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-semibold">
+        500 — Server Error
+      </button>
+    </div>
+    <div id="statusResult" class="mt-3 hidden"></div>
+  </div>
+
+
+  <!-- ======= SECTION 5 — RATE LIMITING ======= -->
+  <div class="bg-white rounded-xl shadow p-6 mb-6">
+    <h2 class="text-xl font-bold text-gray-700 border-b-2 border-blue-400 pb-2 mb-4">
+      5. Rate Limiting
+    </h2>
+    <p class="text-gray-500 text-sm mb-3">Click the button many times quickly to see rate limiting in action</p>
+    <button onclick="rateLimitDemo()"
+      class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold">
+      Call API
+    </button>
+    <div id="rateLimitResult" class="mt-3 bg-gray-50 p-3 rounded-lg text-sm">
+      Calls made: <span id="callCount" class="font-bold text-blue-600">0</span> / 5 allowed
+    </div>
+  </div>
+
+
+  <!-- ======= SECTION 6 — REST VS GRAPHQL ======= -->
+  <div class="bg-white rounded-xl shadow p-6 mb-6">
+    <h2 class="text-xl font-bold text-gray-700 border-b-2 border-blue-400 pb-2 mb-4">
+      6. REST vs GraphQL — Data Fetching
+    </h2>
+    <div class="grid grid-cols-2 gap-4 mb-4">
+      <div class="bg-yellow-50 p-4 rounded-lg">
+        <p class="font-bold text-yellow-600 mb-2">REST — Gets Everything</p>
+        <pre class="text-xs text-gray-700 whitespace-pre-wrap">GET /api/user/1
+Returns ALL user data:
+{
+  id, name, email,
+  phone, address,
+  company, website...
+}
+Even data you don't need!</pre>
+      </div>
+      <div class="bg-purple-50 p-4 rounded-lg">
+        <p class="font-bold text-purple-600 mb-2">GraphQL — Gets Exactly What You Need</p>
+        <pre class="text-xs text-gray-700 whitespace-pre-wrap">query {
+  user(id: 1) {
+    name
+    email
+  }
+}
+Returns ONLY:
+{ name, email }
+Nothing extra!</pre>
+      </div>
+    </div>
+    <button onclick="showRestVsGraphql()"
+      class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold">
+      See the Difference
+    </button>
+    <div id="restGraphqlResult" class="mt-3 hidden"></div>
+  </div>
+
+
+  <script>
+
+    // 1. API CONCEPT
+    function showApiConcept() {
+      var steps = [
+        { step: "1", text: "You (client) send a REQUEST to the API endpoint", color: "text-blue-600" },
+        { step: "2", text: "API receives the request and forwards it to the server", color: "text-green-600" },
+        { step: "3", text: "Server processes the request and queries the database", color: "text-orange-600" },
+        { step: "4", text: "Server sends data back to the API", color: "text-orange-600" },
+        { step: "5", text: "API sends the RESPONSE back to you (client)", color: "text-blue-600" },
+        { step: "6", text: "You receive the data without ever touching the database directly", color: "text-purple-600" }
+      ];
+
+      var html = '<div class="space-y-2">';
+      steps.forEach(function(s) {
+        html += '<div class="flex gap-2 items-start text-sm">';
+        html += '<span class="font-bold text-gray-500 w-4">' + s.step + '.</span>';
+        html += '<span class="' + s.color + '">' + s.text + '</span>';
+        html += '</div>';
+      });
+      html += '</div>';
+
+      document.getElementById("apiConceptResult").innerHTML = html;
+      document.getElementById("apiConceptResult").classList.remove("hidden");
+    }
+
+
+    // 2. GET REQUEST
+    function getRequest() {
+      document.getElementById("getResult").innerHTML =
+        '<p class="text-gray-400 text-sm">Sending GET request...</p>';
+      document.getElementById("getResult").classList.remove("hidden");
+      $.ajax({
+        url: "https://jsonplaceholder.typicode.com/users/1",
+        method: "GET",
+        success: function(data) {
+          document.getElementById("getResult").innerHTML =
+            '<p class="font-semibold text-green-600 mb-2">✅ 200 OK — Response received!</p>' +
+            '<div class="bg-gray-50 p-3 rounded-lg text-xs space-y-1">' +
+            '<p><span class="font-semibold">Name:</span> ' + data.name + '</p>' +
+            '<p><span class="font-semibold">Email:</span> ' + data.email + '</p>' +
+            '<p><span class="font-semibold">Phone:</span> ' + data.phone + '</p>' +
+            '<p><span class="font-semibold">Company:</span> ' + data.company.name + '</p>' +
+            '</div>' +
+            '<p class="text-gray-400 text-xs mt-2">GET request fetched this user data from the server</p>';
+        },
+        error: function(err) {
+          document.getElementById("getResult").innerHTML =
+            '<p class="text-red-500">❌ Error: ' + err.status + ' ' + err.statusText + '</p>';
+        }
+      });
+    }
+
+
+    // 3. POST REQUEST
+    function postRequest() {
+      document.getElementById("postResult").innerHTML =
+        '<p class="text-gray-400 text-sm">Sending POST request...</p>';
+      document.getElementById("postResult").classList.remove("hidden");
+
+      $.ajax({
+        url: "https://jsonplaceholder.typicode.com/posts",
+        method: "POST",
+        contentType: "application/json",
+        data: JSON.stringify({
+          title: "My New Post",
+          body: "This is the content of my post",
+          userId: 1
+        }),
+        success: function(data) {
+          document.getElementById("postResult").innerHTML =
+            '<p class="font-semibold text-green-600 mb-2">✅ 201 Created — Post created successfully!</p>' +
+            '<div class="bg-gray-50 p-3 rounded-lg text-xs space-y-1">' +
+            '<p><span class="font-semibold">ID:</span> ' + data.id + '</p>' +
+            '<p><span class="font-semibold">Title:</span> ' + data.title + '</p>' +
+            '<p><span class="font-semibold">Body:</span> ' + data.body + '</p>' +
+            '</div>' +
+            '<p class="text-gray-400 text-xs mt-2">POST request sent data to the server and created a new resource</p>';
+        },
+        error: function(err) {
+          document.getElementById("postResult").innerHTML =
+            '<p class="text-red-500">❌ Error: ' + err.status + ' ' + err.statusText + '</p>';
+        }
+      });
+    }
+
+
+    // 4. STATUS CODES
+    var statusCodes = {
+      200: { label: "OK", color: "text-green-600", desc: "Request succeeded. Data returned successfully.", example: "GET /users returns a list of users" },
+      201: { label: "Created", color: "text-blue-600", desc: "Resource created successfully.", example: "POST /users creates a new user" },
+      404: { label: "Not Found", color: "text-yellow-600", desc: "The requested resource does not exist.", example: "GET /users/99999 — user not found" },
+      401: { label: "Unauthorized", color: "text-orange-600", desc: "Authentication required. You need to log in.", example: "Trying to access private data without a token" },
+      500: { label: "Server Error", color: "text-red-600", desc: "Something went wrong on the server side.", example: "Database crashed or server threw an exception" }
+    };
+
+    function showStatus(code) {
+      var s = statusCodes[code];
+      document.getElementById("statusResult").innerHTML =
+        '<div class="bg-gray-50 p-3 rounded-lg">' +
+        '<p class="font-bold text-2xl ' + s.color + '">' + code + ' — ' + s.label + '</p>' +
+        '<p class="text-gray-600 mt-1">' + s.desc + '</p>' +
+        '<p class="text-gray-400 text-xs mt-1">Example: ' + s.example + '</p>' +
+        '</div>';
+      document.getElementById("statusResult").classList.remove("hidden");
+    }
+
+
+    // 5. RATE LIMITING
+    var callsMade = 0;
+    var rateLimit = 5;
+    var resetTimer = null;
+
+    function rateLimitDemo() {
+      callsMade++;
+      document.getElementById("callCount").textContent = callsMade;
+      if (callsMade > rateLimit) {
+        document.getElementById("rateLimitResult").innerHTML =
+          '<p class="text-red-500 font-semibold">❌ 429 Too Many Requests — Rate limit exceeded!</p>' +
+          '<p class="text-gray-400 text-xs mt-1">You made ' + callsMade + ' calls. Limit is ' + rateLimit + '. Please wait before trying again.</p>' +
+          '<p class="text-gray-400 text-xs">This is how APIs protect themselves from abuse.</p>';
+      } else {
+        document.getElementById("rateLimitResult").innerHTML =
+          'Calls made: <span class="font-bold text-blue-600">' + callsMade + '</span> / ' + rateLimit + ' allowed' +
+          (callsMade === rateLimit ? '<p class="text-yellow-500 text-xs mt-1">⚠️ One more call and you will be rate limited!</p>' : '');
+      }
+
+      // Reset after 5 seconds
+      clearTimeout(resetTimer);
+      resetTimer = setTimeout(function() {
+        callsMade = 0;
+        document.getElementById("rateLimitResult").innerHTML =
+          'Calls made: <span class="font-bold text-blue-600">0</span> / ' + rateLimit + ' allowed' +
+          '<p class="text-green-500 text-xs mt-1">✅ Rate limit reset!</p>';
+      }, 5000);
+    }
+
+
+    // 6. REST VS GRAPHQL
+    function showRestVsGraphql() {
+      $.ajax({
+        url: "https://jsonplaceholder.typicode.com/users/1",
+        method: "GET",
+        success: function(data) {
+          var allKeys = Object.keys(data).length;
+          document.getElementById("restGraphqlResult").innerHTML =
+            '<div class="grid grid-cols-2 gap-3 text-xs">' +
+            '<div class="bg-yellow-50 p-3 rounded-lg">' +
+            '<p class="font-semibold text-yellow-600 mb-1">REST returned ' + allKeys + ' fields:</p>' +
+            '<p>id, name, username, email, address, phone, website, company...</p>' +
+            '<p class="text-red-400 mt-1">Even fields you did not need!</p>' +
+            '</div>' +
+            '<div class="bg-purple-50 p-3 rounded-lg">' +
+            '<p class="font-semibold text-purple-600 mb-1">GraphQL would return only 2 fields:</p>' +
+            '<p>name: ' + data.name + '</p>' +
+            '<p>email: ' + data.email + '</p>' +
+            '<p class="text-green-600 mt-1">Only what you asked for!</p>' +
+            '</div>' +
+            '</div>';
+          document.getElementById("restGraphqlResult").classList.remove("hidden");
+        }
+      });
+    }
+
+  </script>
+
+</body>
+</html>
